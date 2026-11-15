@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 </head><body>
 <title>המפה הקרועה</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Rubik+Pixels&display=swap">
 <style>
@@ -25,21 +26,21 @@ body{background:var(--deep);color:var(--fg);font-family:var(--ui);font-size:16px
 #app{height:100%;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);width:min(100%,440px);margin-inline:auto;position:relative;background:var(--bg);border-inline:2px solid var(--line);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column}
 .screen{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding-block:10px 16px}
 .scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:14px;padding-block:4px 8px;padding-inline:3px}
-h1,h2,h3{font-family:var(--alenbi);font-weight:700;margin:0;text-wrap:balance;line-height:1.2}
+h1,h2,h3{font-family:var(--alenbi);font-weight:700;margin:0;text-wrap:balance;line-height:1.15}
 h1{font-size:46px;color:var(--yellow);line-height:1.1}
 h2{font-size:28px}
 h3{font-size:20px}
 p{margin:0}
 .muted{color:var(--muted)}
 .small{font-size:14px}
-.lead{font-family:var(--alenbi);font-size:18px;line-height:1.4;color:var(--muted)}
+.lead{font-family:var(--alenbi);font-size:18px;line-height:1.25;color:var(--muted)}
 .pix{image-rendering:pixelated;image-rendering:crisp-edges;display:block;width:100%;height:auto;background:var(--deep)}
 .btn{font:inherit;font-size:16px;color:var(--fg);background:var(--panel);border:2px solid var(--line);box-shadow:3px 3px 0 var(--deep);padding:8px 14px;min-height:48px;text-align:start;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:flex-start;gap:12px}
 .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--deep)}
 .btn:focus-visible,.ib:focus-visible,.chip:focus-visible,.tab:focus-visible,input:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 .btn .mk{flex:none;width:8px;height:8px;background:var(--muted)}
 .btn.center{justify-content:center;text-align:center}
-.btn.yellow{background:var(--yellow);border-color:var(--yellow);color:var(--bg);font-weight:700;font-size:17px;min-height:52px}
+.btn.yellow{background:var(--yellow);border-color:var(--yellow);color:var(--bg);font-weight:700;font-size:21px;min-height:56px;gap:12px}
 .btn.mid{background:var(--line);color:var(--fg);font-weight:700}
 .btn.ghost{background:transparent;border-color:var(--line);box-shadow:none;color:var(--muted);font-weight:500}
 .btn.quiet{background:transparent;border-color:transparent;box-shadow:none;color:var(--muted);font-weight:500;width:auto;min-height:44px;padding:0 12px;font-size:14px}
@@ -64,22 +65,28 @@ input[type=text]{font:inherit;font-size:20px;background:var(--deep);color:var(--
 .tip .hd{display:flex;justify-content:space-between;align-items:baseline}
 .tip .hd b{font-family:var(--alenbi);font-size:18px}
 .imgwrap{position:relative;border:2px solid var(--line);align-self:center;width:100%}
-.imgwrap.tall{width:216px;max-width:70%}
+.imgwrap.tall{width:300px;max-width:84%}
+.imgwrap:not(.tall){width:calc(100% + 38px);margin-inline:-19px;border-inline-width:0}
 .stats{position:absolute;inset-block-end:8px;inset-inline-start:8px;display:flex;gap:12px;background:rgba(8,6,20,.84);padding:4px 8px;font-size:14px;font-variant-numeric:tabular-nums}
 .stats span{display:flex;align-items:center;gap:5px}
-.opens{font-family:var(--alenbi);font-size:16px;line-height:1.4;color:var(--muted);border-inline-start:3px solid var(--line);padding-inline-start:10px}
-.story{font-family:var(--alenbi);font-size:20px;line-height:1.4;text-wrap:pretty}
+.opens{font-family:var(--alenbi);font-size:17px;line-height:1.25;color:var(--muted);text-align:center;text-wrap:balance}
+.story{font-family:var(--alenbi);font-size:21px;line-height:1.25;text-wrap:balance;text-align:center}
 .kw{font-family:var(--alenbi);font-weight:700;color:var(--yellow)}
 .choices{display:flex;flex-direction:column;gap:10px;padding-block:6px 4px}
 .fade{animation:fd .4s ease both}
 @keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.fade,.blink{animation:none!important}}
 #s-open{align-items:center;text-align:center;gap:14px;padding-top:24px}
-#s-open .frame{border:2px solid var(--line);width:216px;max-width:62%;flex:none}
+#s-open .frame{border:2px solid var(--line);height:min(54vh,480px);aspect-ratio:3/4;max-width:100%;flex:none}
+#s-open .frame img{width:100%;height:100%}
 #s-open .sub{font-family:var(--alenbi);font-size:18px;color:var(--muted)}
-#s-open .btn{margin-top:auto}
+#s-open .mid{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px}
 .lockwrap{display:flex;justify-content:center}
-svg.lock{width:min(100%,260px);aspect-ratio:1;touch-action:none;user-select:none;background:var(--deep);border:2px solid var(--line)}
+.lockwrap{align-items:flex-end;gap:10px}
+.deco{flex:none;width:34px;height:auto;opacity:.9;align-self:flex-end;margin-bottom:2px}
+@media (max-width:330px){.deco{display:none}}
+
+svg.lock{flex:0 1 240px;min-width:0;width:240px;max-width:100%;aspect-ratio:1;touch-action:none;user-select:none;background:var(--deep);border:2px solid var(--line)}
 .lock .dot{fill:var(--panel);stroke:var(--line);stroke-width:2}
 .lock .dot.on{fill:var(--yellow);stroke:var(--fg)}
 .lock polyline{fill:none;stroke:var(--yellow);stroke-width:5;stroke-linejoin:round;stroke-linecap:round;opacity:.85}
@@ -100,7 +107,7 @@ svg.lock{width:min(100%,260px);aspect-ratio:1;touch-action:none;user-select:none
 .node .k{font-family:var(--alenbi);font-weight:700;font-size:18px}
 .node .c{font-size:15px}
 .node .go{align-self:flex-start;width:auto}
-.fullstory p{font-family:var(--alenbi);margin-bottom:12px;font-size:18px;line-height:1.4}
+.fullstory p{font-family:var(--alenbi);margin-bottom:12px;font-size:18px;line-height:1.3}
 .fullstory .pick{font-family:var(--ui);color:var(--yellow);font-size:15px}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .end{display:flex;flex-direction:column;gap:6px;font-size:13px;text-align:center;color:var(--muted)}
@@ -112,12 +119,21 @@ svg.lock{width:min(100%,260px);aspect-ratio:1;touch-action:none;user-select:none
 .blink{color:var(--yellow);animation:bl 1.6s steps(2,jump-none) infinite}
 @keyframes bl{50%{opacity:.3}}
 .say{background:var(--panel);border:2px solid var(--line);border-inline-start:6px solid var(--yellow);padding:10px 12px;display:flex;flex-direction:column;gap:6px}
-.say p{font-family:var(--alenbi);font-size:18px;line-height:1.4}
+.say p{font-family:var(--alenbi);font-size:18px;line-height:1.3}
 .say b{color:var(--yellow)}
 .stg{display:flex;align-items:center;gap:6px;font-size:14px}
 .stg b{margin-inline-start:6px}
 .sq{width:14px;height:14px;border:2px solid var(--line);background:var(--deep)}
 .sq.on{background:var(--yellow);border-color:var(--yellow)}
+.acts{display:flex;flex-direction:column;gap:6px;flex:none}
+.btn.txt{background:transparent;border-color:transparent;box-shadow:none;color:var(--yellow);font-weight:700;font-size:18px;text-decoration:underline;text-underline-offset:4px;min-height:52px}
+.btn.txt:active{transform:none}
+#s-entry{align-items:center;justify-content:center;text-align:center;gap:18px}
+#s-entry h2{font-size:32px;color:var(--yellow)}
+.lead2{font-family:var(--alenbi);font-size:22px;line-height:1.3;color:var(--fg);max-width:20em}
+#s-entry .acts{width:100%;margin-top:34px}
+.field+.lead,.field+.say{margin-top:18px}
+.err .chip{padding:0;min-height:0;display:inline;border:0;font:inherit;color:var(--yellow);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 [hidden]{display:none!important}
 </style>
 <div id="app" dir="rtl" lang="he"></div>
@@ -131,7 +147,7 @@ const STEPS=[
  choices:[
  {label:'לצאת מיד אל יער הצללים',opens:'יצאתם בריצה, ועד שהגעתם אל שער הכפר כבר היה חשוך לגמרי. יובל נשם בכבדות ולא אמר מילה.',fx:{c:1}},
  {label:'לבדוק את המפה לפני שיוצאים',opens:'פרשת את המפה וראית שהחץ האדום מצביע על יער הצללים. יובל הציץ מהר לצדדים, כאילו הסתיר ממך משהו.',fx:{w:1}},
- {label:'להרגיע את הילדים הקטנים שפחדו',opens:'הילדים הקטנים חייכו, וגברת נרית מהבית הסמוך נתנה לך פנס קטן שעוד דלק. עם האור הקטן ביד יצאתם אל גבול היער.',fx:{h:1,item:'פנס קטן'}}]},
+ {label:'להרגיע את הילדים הקטנים שפחדו',opens:'הילדים הקטנים חייכו, וזוהר מהבית הסמוך נתנה לך פנס קטן שעוד דלק. עם האור הקטן ביד יצאתם אל גבול היער.',fx:{h:1,item:'פנס קטן'}}]},
 {key:'רחש',img:'t00_act1_gate',tall:true,text:'בקצה הכפר עמד שער העץ הישן, ומעבר לו נפרש יער הצללים, שקט ושחור. מבין העצים נשמע רחש עלים, כאילו מישהו בפנים נושם. יובל התקרב אליך ולחש שהוא מעולם לא היה שם. לפי המפה, הדרך אל האור שנעלם עוברת בדיוק דרך היער הזה.',
  choices:[
  {label:'להיכנס ליער בלי לחכות',opens:'נכנסתם ליער, והענפים נסגרו מאחוריכם בשקט, כמו דלת שמישהו סוגר בזהירות.',fx:{c:1}},
@@ -173,7 +189,7 @@ const STEPS=[
 ];
 STEPS.slice(0,4).forEach(s=>{s.kw=s.key});
 const ENDINGS=[
- {id:'home',name:'חזרה הביתה',img:'te0_early_home',text:'חזרת הביתה וישבת ליד החלון עד הבוקר. הפנסים נשארו כבויים, אבל הילדים הקטנים נרדמו לידך בחום. גברת נרית אמרה שהיער ימתין, ואולי בפעם הבאה אפשר יהיה להיכנס.',hint:'אולי בפעם הבאה'},
+ {id:'home',name:'חזרה הביתה',img:'te0_early_home',text:'חזרת הביתה וישבת ליד החלון עד הבוקר. הפנסים נשארו כבויים, אבל הילדים הקטנים נרדמו לידך בחום. זוהר אמרה שהיער ימתין, ואולי בפעם הבאה אפשר יהיה להיכנס.',hint:'אולי בפעם הבאה'},
  {id:'a',name:'אור לכולם'},{id:'b',name:'החבר שחזר'},{id:'c',name:'הבריחה החכמה'},{id:'d',name:'האומץ של הכפר'},{id:'e',name:'הסוד נחשף'},{id:'f',name:'פנס קטן'},{id:'g',name:'ארץ האורות'},{id:'h',name:'אור קטן'}
 ];
 const TOTAL=40;
@@ -219,14 +235,17 @@ function mutate(fn){const u=users();fn(u[S.user]);saveUsers(u)}
 function undoLast(){mutate(m=>{const s=m.saves.find(x=>x.id===S.save);s.hist.pop();s.upd=Date.now()});play()}
 function show(html,after){app.innerHTML=html;if(after)after();const sc=$('.scroll');if(sc)sc.scrollTop=0}
 function openScreen(){
- show(`<section class="screen" id="s-open"><div class="frame">${img('opening')}</div><h1>המפה הקרועה</h1><div class="sub">הרפתקה בכפר הפנסים</div>
- <button class="btn yellow center" id="go">${ico('play',18)}<span>התחל</span></button></section>`,()=>{
+ show(`<section class="screen" id="s-open"><div class="frame">${img('opening')}</div><div class="mid"><h1>המפה הקרועה</h1><div class="sub">הרפתקה בכפר הפנסים</div></div>
+ <button class="btn yellow center" id="go"><span>התחל</span>${ico('play',14)}</button></section>`,()=>{
   $('#go').onclick=()=>{const r=sget('mk_remember',null);const u=users();if(r&&u[r]){S.user=r;menu()}else entry()};
  });
 }
+const DCOL={'#':'#3D3478','y':'#8C7424','Y':'#CDA832','m':'#5EE0C0'};
+function decoSvg(rows){let r='';rows.forEach((row,y)=>{[...row].forEach((c,x)=>{if(c!=='.')r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${DCOL[c]}"/>`})});return `<svg class="deco" viewBox="0 0 9 24" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`}
+const DECO_L=decoSvg(["...yyy...", "..y...y..", "..y...y..", ".yyyyyyy.", ".y.....y.", ".y..Y..y.", ".y.YYY.y.", ".y.YYY.y.", ".y..Y..y.", "..y...y..", ".yyyyyyy.", "....#....", "....#....", "....#....", "....#....", "....#....", "....#....", "....#....", "....#....", "....#....", "....#....", "....#....", "...###...", "..#####.."]),DECO_R=decoSvg([".........", ".........", "......m..", ".........", ".........", "..m......", ".........", ".........", ".......m.", "....#....", ".m.###...", "..#####..", "...###...", "..#####.m", ".#######.", "..#####..", ".#######.", "#########", "....#....", "....#....", "....#....", "....#....", "...###...", "..#####.."]);
 function lock(host,onDone){
- const P=[40,120,200];host.innerHTML=`<svg class="lock" viewBox="0 0 240 240" role="img" aria-label="לוח דפוס של תשע נקודות">${[...Array(9)].map((_,i)=>`<circle class="dot" cx="${P[i%3]}" cy="${P[Math.floor(i/3)]}" r="15"/><text x="${P[i%3]}" y="${P[Math.floor(i/3)]+34}" text-anchor="middle">${i+1}</text>`).join('')}<polyline points=""/></svg>`;
- const svg=$('svg',host),poly=$('polyline',svg),dots=svg.querySelectorAll('.dot');let seq=[],drawing=false,pt=null;
+ const P=[40,120,200];host.innerHTML=DECO_L+`<svg class="lock" viewBox="0 0 240 240" role="img" aria-label="לוח דפוס של תשע נקודות">${[...Array(9)].map((_,i)=>`<circle class="dot" cx="${P[i%3]}" cy="${P[Math.floor(i/3)]}" r="15"/><text x="${P[i%3]}" y="${P[Math.floor(i/3)]+34}" text-anchor="middle">${i+1}</text>`).join('')}<polyline points=""/></svg>`+DECO_R;
+ const svg=$('svg.lock',host),poly=$('polyline',svg),dots=svg.querySelectorAll('.dot');let seq=[],drawing=false,pt=null;
  const xy=i=>[P[(i-1)%3],P[Math.floor((i-1)/3)]];
  function loc(e){const r=svg.getBoundingClientRect();return[(e.clientX-r.left)*240/r.width,(e.clientY-r.top)*240/r.height]}
  function draw(){const pts=seq.map(i=>xy(i).join(','));if(drawing&&pt&&seq.length)pts.push(pt.join(','));poly.setAttribute('points',pts.join(' '));dots.forEach((d,k)=>d.classList.toggle('on',seq.includes(k+1)))}
@@ -237,14 +256,22 @@ function lock(host,onDone){
  svg.addEventListener('pointerup',end);svg.addEventListener('pointercancel',end);
 }
 function backBtn(){return `<button class="chip" id="back">${ico('back',16)}<span>חזרה</span></button>`}
+function lantern(sz){
+ const R=['...###...','..#...#..','..#...#..','.#######.','.#.....#.','.#..F..#.','.#.FFF.#.','.#.FFF.#.','.#..F..#.','..#...#..','.#######.','..#####..'];
+ let r='';R.forEach((row,y)=>{[...row].forEach((c,x)=>{if(c!=='.')r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${c==='F'?'#F4EFE0':'#CDA832'}"/>`})});
+ return `<svg viewBox="0 0 9 12" width="${sz}" height="${Math.round(sz*12/9)}" shape-rendering="crispEdges" style="filter:drop-shadow(0 0 14px rgba(205,168,50,.55))" aria-hidden="true">${r}</svg>`;
+}
 function entry(){
- show(`<section class="screen"><div class="scroll fade"><h2>מי נכנס למשחק?</h2><p class="lead">הכינוי הוא גם השם שלכם בסיפור.</p>
- <button class="btn yellow center" id="b-new">אני חדש כאן</button>
- <button class="btn mid center" id="b-login">יש לי כינוי ודפוס</button></div></section>`,()=>{$('#b-login').onclick=login;$('#b-new').onclick=signup});
+ show(`<section class="screen" id="s-entry"><div class="fade">${lantern(72)}</div>
+ <h2 class="fade">פנים חדשות בכפר הפנסים!</h2>
+ <p class="lead2 fade">אני זוהר, מדליקת הפנסים.<br>אותך אני עוד לא מכירה.<br>איך קוראים לך?</p>
+ <div class="acts fade"><button class="btn yellow center" id="b-new">חברים שלי קוראים לי…</button>
+ <button class="btn txt center" id="b-login">כבר היית כאן? כניסה עם דפוס</button></div></section>`,()=>{$('#b-login').onclick=login;$('#b-new').onclick=signup});
 }
 function remember(n){if($('#rem').checked)sset('mk_remember',n);else sset('mk_remember',null)}
 const REM=`<label class="row" style="align-items:center;gap:10px;font-size:16px;color:var(--fg)"><input type="checkbox" id="rem" checked style="width:22px;height:22px;flex:0 0 22px;accent-color:#CDA832"><span style="flex:1">זכרו אותי במכשיר הזה</span></label>`;
 function login(){
+ let tries=0;
  show(`<section class="screen"><div class="top"><h2>ברוכים השבים</h2>${backBtn()}</div><div class="scroll fade">
  <div class="field"><label for="nick">הכינוי שלך</label><input type="text" id="nick" maxlength="12" autocomplete="off"></div>
  <p class="lead">ציירו את הדפוס שלכם.</p><div class="lockwrap" id="lk"></div><div class="err" id="err" role="alert"></div>${REM}
@@ -254,7 +281,8 @@ function login(){
    const n=$('#nick').value.trim(),u=users()[n];
    if(!n){$('#err').textContent='כתבו קודם את הכינוי.';return}
    if(seq.length<4){$('#err').textContent='הדפוס קצר מדי. חברו לפחות ארבע נקודות.';return}
-   if(!u||u.pat!==seq.join('')){$('#err').textContent='הכינוי או הדפוס לא מתאימים. נסו שוב.';return}
+   if(!u){$('#err').innerHTML=`לא מצאנו כינוי כזה. בדקו שכתבתם אותו בדיוק כמו בפעם הקודמת, או <button class="chip" id="goNew">התחילו כינוי חדש</button>`;$('#goNew').onclick=signup;return}
+   if(u.pat!==seq.join('')){tries++;$('#err').textContent=tries>=3?'הדפוס עדיין לא מתאים. נסו לצייר אותו לאט, מאותה נקודת התחלה. אם שכחתם אותו, אפשר להתחיל כינוי חדש.':'הכינוי נמצא, אבל הדפוס לא מתאים. נסו לצייר אותו שוב.';return}
    S.user=n;remember(n);menu();
   });
  });
@@ -262,7 +290,7 @@ function login(){
 function signup(){
  let first=null;
  show(`<section class="screen"><div class="top"><h2>משתמש חדש</h2>${backBtn()}</div><div class="scroll fade">
- <div class="field"><label for="nick">בחרו כינוי (2 עד 12 תווים)</label><input type="text" id="nick" maxlength="12" autocomplete="off"></div>
+ <div class="field"><label for="nick">חברים שלי קוראים לי… (2 עד 12 תווים)</label><input type="text" id="nick" maxlength="12" autocomplete="off"></div>
  <div class="say" id="say"></div>
  <div class="lockwrap" id="lk"></div><div class="err" id="err" role="alert"></div>
  <button class="btn ghost center" id="redo" hidden>לצייר דפוס חדש מההתחלה</button>${REM}
@@ -296,9 +324,10 @@ function menu(){
  const me=users()[S.user];const n=me.saves.length;
  show(`<section class="screen"><div class="top"><span></span><button class="btn" id="out" style="width:auto;min-height:44px;padding:0 14px;font-size:14px;font-weight:500">${ico('person',18)}<span>החלפת משתמש</span></button></div><div class="scroll fade">
  <h2 style="font-size:30px">שלום, ${esc(S.user)}</h2>
- <button class="btn yellow center" id="new">${ico('play',18)}<span>משחק חדש</span></button>
- <div class="meta" style="align-items:baseline"><h3>להמשיך מאיפה שעצרתם</h3><span>${n} מתוך 5</span></div>
- <div id="list" style="display:flex;flex-direction:column;gap:12px">${n?'':'<p class="muted">עוד אין שמירות. התחילו משחק חדש והוא יישמר לבד אחרי כל בחירה.</p>'}</div></div>
+ ${n?'':'<p class="lead">עוד אין שמירות. התחילו משחק חדש והוא יישמר לבד אחרי כל בחירה.</p>'}
+ <button class="btn yellow center" id="new"><span>משחק חדש</span>${ico('play',14)}</button>
+ ${n?`<div class="meta" style="align-items:baseline"><h3>להמשיך מאיפה שעצרתם</h3><span>${n} מתוך 5</span></div>
+ <div id="list" style="display:flex;flex-direction:column;gap:12px"></div>`:'<div id="list" hidden></div>'}</div>
  <button class="btn" id="end"><span class="mk"></span><span style="flex:1">אוסף הסופים</span><span class="muted small">${me.endings.length} מתוך ${ENDINGS.length}</span></button></section>`,()=>{
   $('#out').onclick=()=>{sset('mk_remember',null);S.user=null;entry()};
   $('#end').onclick=()=>endings('menu');
