@@ -34,10 +34,18 @@ p{margin:0}
 .muted{color:var(--muted)}
 .small{font-size:14px}
 .lead{font-family:var(--alenbi);font-size:18px;line-height:1.4;color:var(--muted)}
-.ov{position:absolute;inset:0;width:100%!important;height:100%!important;background:none!important;pointer-events:none;animation:twinkle 6s ease-in-out infinite}
-.ov.g2{animation-duration:8.5s;animation-delay:-3s}.ov.g3{animation-duration:11s;animation-delay:-7s}
-@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.3}}
-@media (prefers-reduced-motion:reduce){.ov{animation:none}}
+.ov{position:absolute;inset:0;width:100%!important;height:100%!important;background:none!important;pointer-events:none;will-change:opacity,transform}
+.ov.star{animation:flicker 3s linear infinite}
+.ov.big{animation:breathe 6s ease-in-out infinite}
+.ov.dust{animation:dust 18s ease-in-out infinite}
+.ov.halo{animation:halo 7s ease-in-out infinite}
+@keyframes flicker{0%{opacity:1}7%{opacity:.2}12%{opacity:.85}27%{opacity:.35}33%{opacity:1}46%{opacity:.12}52%{opacity:.7}63%{opacity:.25}71%{opacity:1}84%{opacity:.4}92%{opacity:.9}100%{opacity:1}}
+@keyframes twA{0%,62%,100%{opacity:1}68%{opacity:.12}74%{opacity:.9}80%{opacity:.25}88%{opacity:1}}
+@keyframes twB{0%,40%,100%{opacity:1}46%{opacity:.2}51%{opacity:.8}57%{opacity:.1}64%{opacity:.95}}
+@keyframes twC{0%,80%,100%{opacity:1}84%{opacity:.15}90%{opacity:.7}95%{opacity:.2}}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:var(--lo,.5)}}
+@keyframes dust{0%{opacity:0;transform:translate(0,0)}30%{opacity:.6}70%{opacity:.5;transform:translate(var(--dx,1%),var(--dy,-2%))}100%{opacity:0;transform:translate(calc(var(--dx,1%)*1.6),calc(var(--dy,-2%)*1.6))}}
+@keyframes halo{0%{opacity:1}62%{opacity:.3}100%{opacity:1}}
 #s-open .frame,.end .t{position:relative}
 .pix{image-rendering:pixelated;image-rendering:crisp-edges;display:block;width:100%;height:auto;background:var(--deep)}
 .btn{font:inherit;font-size:16px;color:var(--fg);background:var(--panel);border:2px solid var(--line);box-shadow:3px 3px 0 var(--deep);padding:8px 14px;min-height:48px;text-align:start;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:flex-start;gap:12px}
@@ -590,22 +598,42 @@ function sparkProc(name){
    const W=im.naturalWidth,H=im.naturalHeight,c=document.createElement('canvas');c.width=W;c.height=H;
    const x=c.getContext('2d');x.drawImage(im,0,0);const d=x.getImageData(0,0,W,H),p=d.data;
    const br=i=>p[i+3]>0&&((p[i+1]>=150&&p[i+2]>=115&&p[i]<150)||(p[i]>=200&&p[i+1]>=200&&p[i+2]>=200));
+   const hl=i=>p[i+3]>0&&p[i]<30&&p[i+1]>=45&&p[i+1]<=75&&p[i+2]>=45&&p[i+2]<=75&&Math.abs(p[i+1]-p[i+2])<8;
    const lab=new Int32Array(W*H).fill(-1),comps=[];
    for(let y0=0;y0<H;y0++)for(let x0=0;x0<W;x0++){const k=y0*W+x0;if(lab[k]>=0||!br(k*4))continue;
     const st=[k],px=[];lab[k]=comps.length;
     while(st.length){const q=st.pop();px.push(q);const qx=q%W,qy=(q/W)|0;
      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const nx=qx+dx,ny=qy+dy;if(nx<0||ny<0||nx>=W||ny>=H)continue;const n=ny*W+nx;if(lab[n]<0&&br(n*4)){lab[n]=comps.length;st.push(n)}}}
     comps.push(px)}
-   const small=comps.filter(c=>c.length<=24);
-   const chosen=small.filter((c,i)=>i%2===0);
-   const groups=[0,1,2].map(()=>{const o=document.createElement('canvas');o.width=W;o.height=H;const ox=o.getContext('2d'),od=ox.createImageData(W,H);return{o,ox,od}});
+   let hh=0;for(const ch of name)hh=(hh*31+ch.charCodeAt(0))>>>0;
+   let seed=hh||7;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+   const hearts=comps.filter(q=>q.length>=12);
+   const bigs=comps.filter(q=>q.length>4&&q.length<12);
+   const smalls=comps.filter(q=>q.length<=4);
+   const stars=smalls.filter((q,i)=>i%3!==2),dust=smalls.filter((q,i)=>i%3===2);
+   // halo pixels near hearts
+   const halo=[];
+   if(hearts.length){const hp=[];hearts.forEach(q=>q.forEach(k=>hp.push([k%W,(k/W)|0])));
+    for(let k=0;k<W*H;k++){if(!hl(k*4))continue;const kx=k%W,ky=(k/W)|0;let m=1e9;for(const [px,py] of hp){const dd=(px-kx)*(px-kx)+(py-ky)*(py-ky);if(dd<m)m=dd}if(m<=600)halo.push(k)}}
    const base=new Uint8ClampedArray(p);
-   chosen.forEach((c,ci)=>{const g=groups[ci%3];
-    c.forEach(k=>{const i=k*4;g.od.data[i]=p[i];g.od.data[i+1]=p[i+1];g.od.data[i+2]=p[i+2];g.od.data[i+3]=255;
-     let f=null;for(let r=1;r<=4&&!f;r++){for(let dy=-r;dy<=r&&!f;dy++)for(let dx=-r;dx<=r;dx++){const nx=(k%W)+dx,ny=((k/W)|0)+dy;if(nx<0||ny<0||nx>=W||ny>=H)continue;const n=ny*W+nx;if(!br(n*4)){f=n*4;break}}}
-     if(f){base[i]=p[f];base[i+1]=p[f+1];base[i+2]=p[f+2]}})});
+   const mk=()=>{const o=document.createElement('canvas');o.width=W;o.height=H;const ox=o.getContext('2d');return{o,ox,od:ox.createImageData(W,H)}};
+   const put=(g,k)=>{const i=k*4;g.od.data[i]=p[i];g.od.data[i+1]=p[i+1];g.od.data[i+2]=p[i+2];g.od.data[i+3]=255;
+    let f=null;for(let r=1;r<=6&&f===null;r++){for(let dy=-r;dy<=r&&f===null;dy++)for(let dx=-r;dx<=r;dx++){const nx=(k%W)+dx,ny=((k/W)|0)+dy;if(nx<0||ny<0||nx>=W||ny>=H)continue;const n=ny*W+nx;if(!br(n*4)&&!hl(n*4)){f=n*4;break}}}
+    if(f!==null){base[i]=p[f];base[i+1]=p[f+1];base[i+2]=p[f+2]}};
+   const layers=[];
+   const build=(cls,items,n,styFn,rr)=>{if(!items.length)return;if(rr)n=Math.min(n,items.length);const gs=[];for(let g=0;g<n;g++)gs.push(mk());
+    items.forEach((q,ci)=>{const g=gs[rr?ci%n:(rnd()*n)|0];(Array.isArray(q)?q:[q]).forEach(k=>put(g,k))});
+    gs.forEach(g=>{g.ox.putImageData(g.od,0,0);layers.push({cls,url:g.o.toDataURL(),sty:styFn()})})};
+   build('star',stars,16,()=>{const dur=2.6+rnd()*5.5,nm=['twA','twB','twC'][(rnd()*3)|0];return `animation-name:${nm};animation-duration:${dur.toFixed(2)}s;animation-delay:-${(rnd()*dur).toFixed(2)}s`},true);
+   build('big',bigs,4,()=>{const dur=4+rnd()*5;return `animation-duration:${dur.toFixed(2)}s;animation-delay:-${(rnd()*dur).toFixed(2)}s;--lo:${(.4+rnd()*.2).toFixed(2)}`});
+   const specks=[];for(let n=0;n<40&&specks.length<18;n++){const sx=(rnd()*W)|0,sy=(rnd()*H)|0,k=sy*W+sx,i=k*4;if(p[i+3]>0&&p[i]<40&&p[i+1]<60&&!br(i)&&!hl(i))specks.push(k)}
+   {const gs=[];for(let g=0;g<4;g++)gs.push(mk());
+    dust.forEach(q=>q.forEach(k=>put(gs[(rnd()*4)|0],k)));
+    specks.forEach(k=>{const g=gs[(rnd()*4)|0],i=k*4;g.od.data[i]=109;g.od.data[i+1]=255;g.od.data[i+2]=208;g.od.data[i+3]=255});
+    gs.forEach(g=>{g.ox.putImageData(g.od,0,0);layers.push({cls:'dust',url:g.o.toDataURL(),sty:(()=>{const dur=10+rnd()*7;return `animation-duration:${dur.toFixed(2)}s;animation-delay:-${(rnd()*dur).toFixed(2)}s;--dx:${((rnd()-.5)*3).toFixed(2)}%;--dy:${(-1-rnd()*2).toFixed(2)}%`})()})})}
+   if(halo.length)build('halo',[halo],1,()=>`animation-duration:${(5+rnd()*2).toFixed(2)}s;animation-delay:-${(rnd()*5).toFixed(2)}s`);
    d.data.set(base);x.putImageData(d,0,0);
-   res({base:c.toDataURL(),ov:groups.map(g=>{g.ox.putImageData(g.od,0,0);return g.o.toDataURL()})})
+   res({base:c.toDataURL(),layers})
   }catch(e){res(null)}};im.onerror=()=>res(null);im.src=IMG[name]})
 }
 function sparkle(){
@@ -613,8 +641,8 @@ function sparkle(){
   const n=el.dataset.n;el.dataset.sp='1';
   (SPK[n]||(SPK[n]=sparkProc(n))).then(r=>{
    if(!r||!el.isConnected)return;
-   el.src=r.base;const cs=getComputedStyle(el);
-   r.ov.forEach((u,i)=>{const o=document.createElement('img');o.className='pix ov g'+(i+1);o.src=u;o.alt='';o.setAttribute('aria-hidden','true');
+   el.src=r.base;const cs=getComputedStyle(el);const only=el.dataset.only?el.dataset.only.split(','):null;
+   r.layers.forEach(L=>{if(only&&!only.includes(L.cls))return;const o=document.createElement('img');o.className='pix ov '+L.cls;o.src=L.url;o.alt='';o.setAttribute('aria-hidden','true');o.style.cssText=L.sty;
     o.style.objectFit=cs.objectFit;o.style.objectPosition=cs.objectPosition;el.after(o)})})})
 }
 function show(html,after){app.innerHTML=html;if(after)after();sparkle();const sc=$('.scroll');if(sc)sc.scrollTop=0}
